@@ -106,7 +106,22 @@ if __name__ == '__main__':
 - In endpoints: Log info for success, error for failure, including the joke for fun.  
 - This demonstrates logging: Track events without changing app behavior.
 
-No changes to `requirements.txt` (already has prometheus-client), `Dockerfile`, or `prometheus.yml`.
+
+Update your prometheus.yml
+```
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'sample-app'
+    static_configs:
+      - targets: ['app:3000']
+
+rule_files:
+  - /etc/prometheus/alert-rules.yml  # Loads your alerting rules
+```
+
+No changes to `requirements.txt` (already has prometheus-client), `Dockerfile`.
 
 ## Step 3: Add Alertmanager to the Setup
 **Why?** Alerting notifies when metrics (from monitoring) go bad, like SLO breaches. We'll add Alertmanager to handle alerts from Prometheus.
