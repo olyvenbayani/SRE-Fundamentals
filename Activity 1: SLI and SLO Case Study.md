@@ -145,6 +145,9 @@ Teams deliver:
 3. Error budget results  
 4. Performance issues identified  
 5. Deployment policy (freeze? slow-roll?)  
-6. Engineering recommendations  
+6. Engineering recommendations
+
+Reference Documentation you can use: 
+Google SRE - SLO Documentation: https://sre.google/workbook/slo-document/
 
 
