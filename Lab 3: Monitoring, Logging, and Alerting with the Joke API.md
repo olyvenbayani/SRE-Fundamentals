@@ -111,14 +111,28 @@ Update your prometheus.yml
 ```
 global:
   scrape_interval: 15s
+  evaluation_interval: 15s
 
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - alertmanager:9093
+
+# Load rules once and periodically evaluate them
+rule_files:
+  - "/etc/prometheus/alert-rules.yml"
+
+# Scrape configuration
 scrape_configs:
-  - job_name: 'sample-app'
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'flask-app'
     static_configs:
       - targets: ['app:3000']
-
-rule_files:
-  - /etc/prometheus/alert-rules.yml  # Loads your alerting rules
 ```
 
 No changes to `requirements.txt` (already has prometheus-client), `Dockerfile`.
@@ -170,24 +184,62 @@ Create new file: `alert-rules.yml` (defines when to alert, e.g., high error rate
 ```yaml
 groups:
   - name: joke-api-alerts
+    interval: 15s  # How often to evaluate these rules
     rules:
+      # Alert when error rate exceeds 10%
       - alert: HighErrorRate
-        expr: sum(rate(flask_http_request_total{status="500"}[5m])) / sum(rate(flask_http_request_total[5m])) > 0.1
+        expr: |
+          (
+            sum(rate(flask_http_request_total{status="500"}[5m]))
+            /
+            sum(rate(flask_http_request_total[5m]))
+          ) > 0.1
         for: 1m
         labels:
           severity: warning
+          service: joke-api
         annotations:
-          summary: "High error rate in Joke API!"
-          description: "Error rate > 10% for 1 minute. Too many bad jokes—check logs!"
+          summary: "High error rate in Joke API"
+          description: "Error rate is {{ $value | humanizePercentage }} (threshold: 10%). Check application logs immediately."
+          dashboard: "http://localhost:9090/graph?g0.expr=rate(flask_http_request_total%7Bstatus%3D%22500%22%7D%5B5m%5D)"
       
+      # Alert when latency is too high
       - alert: HighLatency
-        expr: histogram_quantile(0.99, sum(rate(flask_http_request_duration_seconds_bucket[5m])) by (le)) > 0.2
+        expr: |
+          histogram_quantile(
+            0.99,
+            sum(rate(flask_http_request_duration_seconds_bucket[5m])) by (le)
+          ) > 0.2
         for: 1m
         labels:
           severity: critical
+          service: joke-api
         annotations:
-          summary: "High latency in Joke API!"
-          description: "99th percentile latency > 200ms for 1 minute. Jokes are taking too long!"
+          summary: "High latency detected in Joke API"
+          description: "99th percentile latency is {{ $value | humanizeDuration }} (threshold: 200ms). Users experiencing slow responses."
+          dashboard: "http://localhost:9090/graph"
+      
+      # Additional useful alert: Service is down
+      - alert: ServiceDown
+        expr: up{job="flask-app"} == 0
+        for: 30s
+        labels:
+          severity: critical
+          service: joke-api
+        annotations:
+          summary: "Joke API is down"
+          description: "The Flask application has been unreachable for 30 seconds."
+      
+      # Additional useful alert: High request rate
+      - alert: HighRequestRate
+        expr: sum(rate(flask_http_request_total[5m])) > 100
+        for: 2m
+        labels:
+          severity: info
+          service: joke-api
+        annotations:
+          summary: "High request rate detected"
+          description: "Request rate is {{ $value | humanize }} req/s (threshold: 100 req/s). Possible traffic spike."
 ```
 
 **Explanation:**  
@@ -202,16 +254,14 @@ global:
   resolve_timeout: 5m
 
 route:
-  receiver: web.hook
   group_by: ['alertname']
-  group_wait: 10s
-  group_interval: 10s
+  group_wait: 30s
+  group_interval: 5m
   repeat_interval: 1h
+  receiver: blackhole
 
 receivers:
-  - name: web.hook
-    webhook_configs:
-      - url: 'http://127.0.0.1:5005/'  # Dummy; we won't use real webhooks
+  - name: blackhole
 ```
 
 **Explanation:** Simple setup—alerts will be visible in Alertmanager UI.
