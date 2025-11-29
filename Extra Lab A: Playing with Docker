@@ -1,4 +1,4 @@
-# Lab 1: Playing with Docker
+# Extra Lab A: Playing with Docker
 
 This lab provides a hands-on introduction to Docker for beginners. You'll learn how to run pre-built containers, build your own custom image, and perform basic management tasks. We'll use Play with Docker, a browser-based environment, so no local installation is required.
 
