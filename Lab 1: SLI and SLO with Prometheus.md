@@ -1,4 +1,4 @@
-# Lab 1: SLI/SLOs with Prometheus
+<img width="3310" height="1470" alt="image" src="https://github.com/user-attachments/assets/812c0677-08c4-4d86-b36c-3ff78fdacd76" /># Lab 1: SLI/SLOs with Prometheus
 
 Welcome to Lab 1 of the SRE Workshop! This hands-on activity introduces you to Service Level Indicators (SLIs) and Service Level Objectives (SLOs) using a simple, fun web application monitored by Prometheus. We'll build a Python app that tells jokes, containerize it with Docker, set up monitoring, define SLIs and SLOs, and validate them with simulated traffic.
 
@@ -279,12 +279,25 @@ ab -n 200 -c 10 http://localhost:3000/failure
 sum(rate(flask_http_request_total{status="200"}[5m])) /
 sum(rate(flask_http_request_total[5m]))
 ```
+
+**How to check it:**
+
+Run the query
+If it's ≥ 0.999 → SLO met
+If it's < 0.999 → SLO violated
      
    - Latency: Check if most are under 200ms.
 ```
 histogram_quantile(0.99, sum(rate(http_server_requests_seconds_bucket[5m])) by (le))
 ```
 
+
+**How to check it:**
+
+Run the query
+Look at the output
+If value is < 0.2 seconds → SLO met
+If value is ≥ 0.2 seconds → SLO violated
 
 **Explanation:** `ab` sends requests. Adjust numbers for different scenarios.
 
