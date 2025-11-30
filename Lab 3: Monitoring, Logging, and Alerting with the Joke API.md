@@ -285,7 +285,11 @@ receivers:
 **Why?** See baseline before issues.
 
 1. Make a few requests (browser or curl).  
-2. View logs: `docker logs sample-app` – See timed messages like "Successful request! Joke delivered: [joke]".  
+2. View logs: `docker logs sample-app` – See timed messages like "Successful request! Joke delivered: [joke]".
+
+<img width="2023" height="562" alt="image" src="https://github.com/user-attachments/assets/2dc2ba35-3ae9-4566-9472-dae46ed00396" />
+
+
 3. In Prometheus UI: Query metrics (from Lab 2 explorations). No alerts yet.
 
 **Explanation:** Logging shows events; monitoring shows metrics.
@@ -296,6 +300,9 @@ receivers:
 1. In Prometheus UI > Alerts tab: Rules might not show yet.  
 2. Reload config: `curl -X POST http://localhost:9090/-/reload` (needs `web.enable-lifecycle` in compose).  
 3. Check Alerts tab: See defined rules.
+
+<img width="3344" height="1339" alt="image" src="https://github.com/user-attachments/assets/fba559a6-78a8-45a0-b085-8ae1fdad8fac" />
+
 
 ## Step 7: Simulate Traffic and Trigger Alerts
 **Why?** Test alerting/logging by breaching SLOs.
@@ -314,13 +321,15 @@ ab -n 500 -c 10 http://127.0.0.1:3000/failure  # 50% errors to trigger alert
 4. In Alertmanager UI (http://localhost:9093): View active alerts with fun descriptions.  
 5. Check logs: `docker logs sample-app` – See error logs for failures.
 
+<img width="2326" height="922" alt="image" src="https://github.com/user-attachments/assets/aa6ef217-5d38-4c62-9263-a3856f42d22f" />
+
 **Explanation:** High failures trigger alert. Logs help debug (e.g., see which requests failed).
 
 ## Step 8: Resolve and Reflect
 1. Stop bad traffic. Run mostly successes to resolve.  
 2. Watch alerts resolve in UIs.  
 3. Cleanup: `docker-compose down`  
-4. Discuss: How do logs help with alerts? What if we added Slack notifications?
+4. Discuss: How do logs help with alerts? 
 
 **Troubleshooting:** No alerts? Check expr in rules match your metrics (e.g., use Graph tab to test). Adjust thresholds.
 
