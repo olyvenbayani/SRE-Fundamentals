@@ -95,6 +95,11 @@ volumes:
    - Alertmanager: http://localhost:9093 (if from Lab 3).  
    - Grafana: http://localhost:3001 – Login with admin/admin (change password on first login).
 
+
+
+   <img width="3358" height="1404" alt="image" src="https://github.com/user-attachments/assets/4421676d-c281-4903-b269-ad74be177ef9" />
+
+
 **Troubleshooting:**  
 - Grafana not starting? Check logs: `docker logs grafana`. Ensure no port conflicts (change "3001:3000" if needed).  
 - First login prompt? Set new password when asked.
@@ -103,9 +108,14 @@ volumes:
 **Why?** Links Grafana to Prometheus for querying metrics.
 
 1. In Grafana UI (http://localhost:3001): Left menu > Connections > Data sources > Add new.  
-2. Search/select "Prometheus".  
-3. HTTP URL: `http://prometheus:9090` (internal Docker network name).  
-4. Save & Test—should say "Data source is working".
+2. Search/select "Prometheus".
+
+<img width="3336" height="1372" alt="image" src="https://github.com/user-attachments/assets/c7fe3280-437e-4901-b0fb-7d330fe8d954" />
+
+4. HTTP URL: `http://prometheus:9090` (internal Docker network name).  
+5. Save & Test—should say "Data source is working".
+<img width="2674" height="488" alt="image" src="https://github.com/user-attachments/assets/6ce0407a-397f-4545-bbda-e1bfaf57e10c" />
+
 
 **Explanation:** This lets Grafana pull all metrics (e.g., flask_http_request_total, custom joke_total).
 
