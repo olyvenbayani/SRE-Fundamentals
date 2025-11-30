@@ -746,26 +746,6 @@ Create a reliability report: `lab9-reliability-report.md`
 
 ---
 
-## Bonus Challenges (Optional)
-
-**Challenge 1: Multi-Region Deployment**
-- Deploy the same architecture in two AWS regions
-- Research Route 53 for DNS-based failover between regions
-
-**Challenge 2: Database Resilience**
-- Add RDS database with Multi-AZ deployment
-- Test failover between primary and standby
-
-**Challenge 3: Advanced Chaos**
-- Use AWS Fault Injection Simulator to inject network latency
-- Observe how the system behaves under degraded network conditions
-
-**Challenge 4: Automated Chaos**
-- Write a Lambda function that randomly terminates instances
-- Schedule it to run during business hours (like Chaos Monkey)
-
----
-
 ## Troubleshooting Guide
 
 **Target group shows unhealthy instances:**
