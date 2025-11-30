@@ -128,13 +128,20 @@ volumes:
 2. Add panel: Click "Add panel" > New visualization.  
 3. Data source: Prometheus.  
 4. Build panels (examples below—add one by one):  
-   - **Request Rate Graph (Counter Metric):** Query: `rate(flask_http_request_total[5m])`. Visualization: Time series. Title: "Joke Requests per Second".  
-   - **Availability Gauge (SLI from Lab 1):** Query: `sum(rate(flask_http_request_total{status="200"}[5m])) / sum(rate(flask_http_request_total[5m])) * 100`. Visualization: Gauge (thresholds: green >99, yellow >95, red <95). Title: "Availability %".  
+   - **Request Rate Graph (Counter Metric):** Query: `rate(flask_http_request_total[5m])`. Visualization: Time series. Title: "Joke Requests per Second".
+  
+   <img width="2100" height="1382" alt="image" src="https://github.com/user-attachments/assets/67a95d5c-21a4-444d-8305-5eb2b6147448" />
+
+   - **Availability Gauge (SLI from Lab 1):** Query: `sum(rate(flask_http_request_total{status="200"}[5m])) / sum(rate(flask_http_request_total[5m])) * 100`. Visualization: Gauge (thresholds: green >99, yellow >95, red <95). Title: "Availability %".
+
+   <img width="2726" height="1014" alt="image" src="https://github.com/user-attachments/assets/2dd717ad-d842-4563-b5a2-d70619b306cb" />
+
+     
    - **Latency Histogram:** Query: `histogram_quantile(0.99, sum(rate(flask_http_request_duration_seconds_bucket[5m])) by (le))`. Visualization: Time series. Title: "99th Percentile Latency".  
    - **Humor Level Stat (Gauge Metric from Lab 2):** Query: `humor_level`. Visualization: Stat (shows current value, color-coded). Title: "Current Humor Level".  
    - **Joke Length Distribution (Histogram Metric):** Query: `sum(rate(joke_length_seconds_bucket[5m])) by (le)`. Visualization: Histogram. Title: "Joke Length Buckets".  
-5. Arrange panels: Drag/resize on dashboard. Add rows if needed (via dashboard settings).  
-6. Save dashboard: Top right > Save > Name: "Joke API Health Dashboard".
+6. Arrange panels: Drag/resize on dashboard. Add rows if needed (via dashboard settings).  
+7. Save dashboard: Top right > Save > Name: "Joke API Health Dashboard".
 
 **Explanation:** Each panel uses PromQL queries from previous labs. Time series for trends, gauges for SLOs, histograms for distributions—fun way to monitor "humor health"!
 
