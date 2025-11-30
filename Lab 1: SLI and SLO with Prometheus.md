@@ -197,12 +197,17 @@ scrape_configs:
 **Explore More Queries:**
 To get comfortable with Prometheus, try these additional queries in the Expression box. Click "Execute" after each one, and observe the results in the table or graph view (switch tabs above the results). This helps you understand the metrics before defining SLIs:
 
-flask_http_server_requests_total{status="200"}: Counts only successful requests (HTTP 200).
-http_server_requests_total{status="500"}: Counts error requests (HTTP 500).
-rate(http_server_requests_total[5m]): Shows the rate of requests per second over the last 5 minutes.
-histogram_quantile(0.50, sum(rate(http_server_requests_seconds_bucket[5m])) by (le)): Median (50th percentile) latency—how long half of requests take.
-histogram_quantile(0.99, sum(rate(http_server_requests_seconds_bucket[5m])) by (le)): 99th percentile latency—how long the slowest 1% of requests take.
-up: Checks if the app is up (1 = up, 0 = down).
+- flask_http_server_requests_total{status="200"}: Counts only successful requests (HTTP 200).
+
+- http_server_requests_total{status="500"}: Counts error requests (HTTP 500).
+
+- rate(http_server_requests_total[5m]): Shows the rate of requests per second over the last 5 minutes.
+
+- histogram_quantile(0.50, sum(rate(http_server_requests_seconds_bucket[5m])) by (le)): Median (50th percentile) latency—how long half of requests take.
+
+- histogram_quantile(0.99, sum(rate(http_server_requests_seconds_bucket[5m])) by (le)): 99th percentile latency—how long the slowest 1% of requests take.
+
+- up: Checks if the app is up (1 = up, 0 = down).
 
 Why explore? These build on the basics and prepare you for Step 5. Experiment by making more requests to the app (e.g., reload the browser pages) and see how numbers change. If a query returns "No data," generate traffic by visiting the endpoints multiple times.
 
@@ -267,8 +272,19 @@ ab -n 200 -c 10 http://localhost:3000/failure
 2. Run: `./simulate_traffic.sh`  
 
 3. In Prometheus UI: Re-run SLI queries.  
-   - Availability: Should be ~80% (due to failures). Is it above 99.9%? (No—discuss why and adjust script for passing tests.)  
+   - Availability: Should be ~80% (due to failures). Is it above 99.9%? (No—discuss why and adjust script for passing tests.)
+   
+   Run prom query:
+```
+sum(rate(flask_http_request_total{status="200"}[5m])) /
+sum(rate(flask_http_request_total[5m]))
+```
+     
    - Latency: Check if most are under 200ms.
+```
+histogram_quantile(0.99, sum(rate(http_server_requests_seconds_bucket[5m])) by (le))
+```
+
 
 **Explanation:** `ab` sends requests. Adjust numbers for different scenarios.
 
