@@ -1,4 +1,4 @@
-<img width="3310" height="1470" alt="image" src="https://github.com/user-attachments/assets/812c0677-08c4-4d86-b36c-3ff78fdacd76" /># Lab 1: SLI/SLOs with Prometheus
+Lab 1: SLI/SLOs with Prometheus
 
 Welcome to Lab 1 of the SRE Workshop! This hands-on activity introduces you to Service Level Indicators (SLIs) and Service Level Objectives (SLOs) using a simple, fun web application monitored by Prometheus. We'll build a Python app that tells jokes, containerize it with Docker, set up monitoring, define SLIs and SLOs, and validate them with simulated traffic.
 
@@ -175,6 +175,9 @@ scrape_configs:
    docker ps
    ```
    - You should see `sample-app` and `prometheus`.
+  
+<img width="1241" height="650" alt="Lab1-01" src="https://github.com/user-attachments/assets/431887ee-1a0d-4d82-a9f0-bd0065b44f95" />
+
 
 **Troubleshooting:**  
 - If it fails (e.g., port conflict), run `docker-compose down`, then try again. Or change the host port in `docker-compose.yml` (e.g., "3001:3000").  
@@ -185,12 +188,21 @@ scrape_configs:
 
 1. Open a browser:  
    - http://localhost:3000/success – See a success message with a joke (HTTP 200).  
-   - http://localhost:3000/failure – See a failure message with a joke (HTTP 500).  
+   - http://localhost:3000/failure – See a failure message with a joke (HTTP 500).
+  
+<img width="1639" height="538" alt="Lab1-02" src="https://github.com/user-attachments/assets/fadb5413-6b1d-44c6-94dd-baa5828dde14" />
+
 
 2. Check metrics: http://localhost:3000/metrics – Raw data for Prometheus.  
+<img width="1160" height="770" alt="Lab1-05" src="https://github.com/user-attachments/assets/3c0c263e-6089-4a44-ae90-8ba6d85cb569" />
+
+
 
 3. Open Prometheus UI: http://localhost:9090  
    - In the "Expression" box, query `http_server_requests_total` and click "Execute". You should see request counts.
+  
+<img width="3342" height="842" alt="Lab1-03" src="https://github.com/user-attachments/assets/2b7cdde7-4592-4d54-b84f-bc0293d7f61c" />
+
 
 **Explanation:** These tests confirm the app responds and exposes metrics.
 
@@ -269,7 +281,11 @@ ab -n 200 -c 10 http://localhost:3000/failure
 ```
 
 1. Make it runnable: `chmod +x simulate_traffic.sh`  
-2. Run: `./simulate_traffic.sh`  
+2. Run: `./simulate_traffic.sh`
+
+
+<img width="1160" height="770" alt="Lab1-05" src="https://github.com/user-attachments/assets/04c36c1a-7b28-41b8-9741-51faa9a4d7f1" />
+
 
 3. In Prometheus UI: Re-run SLI queries.  
    - Availability: Should be ~80% (due to failures). Is it above 99.9%? (No—discuss why and adjust script for passing tests.)
@@ -285,6 +301,9 @@ sum(rate(flask_http_request_total[5m]))
 Run the query
 If it's ≥ 0.999 → SLO met
 If it's < 0.999 → SLO violated
+
+<img width="3310" height="1470" alt="Lab1-07" src="https://github.com/user-attachments/assets/bc09ad45-d8fe-467f-af0c-87e86d18a410" />
+
      
    - Latency: Check if most are under 200ms.
 ```
