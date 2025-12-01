@@ -1,4 +1,4 @@
-Lab 1: SLI/SLOs with Prometheus
+## Lab 1: SLI/SLOs with Prometheus
 
 Welcome to Lab 1 of the SRE Workshop! This hands-on activity introduces you to Service Level Indicators (SLIs) and Service Level Objectives (SLOs) using a simple, fun web application monitored by Prometheus. We'll build a Python app that tells jokes, containerize it with Docker, set up monitoring, define SLIs and SLOs, and validate them with simulated traffic.
 
