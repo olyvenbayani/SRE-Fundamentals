@@ -1447,7 +1447,7 @@ aws cloudformation describe-stack-events --stack-name Lab10-SelfHealing-App
 - [ ] Instances have public IPs (if in public subnet)
 - [ ] UserData script completed successfully (check logs)
 
-**Thank you for completing Lab 10!** You now have hands-on experience with one of the most powerful tools in modern cloud infrastructure management. Keep practicing, keep experimenting, and keep building!
+**Thank you for completing Lab 8!** You now have hands-on experience with one of the most powerful tools in modern cloud infrastructure management. Keep practicing, keep experimenting, and keep building!
 
 ---
 
