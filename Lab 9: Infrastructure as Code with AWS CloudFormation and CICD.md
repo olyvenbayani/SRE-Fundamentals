@@ -1,4 +1,4 @@
-Welcome to Lab 8 of the SRE Workshop! This hands-on activity introduces you to Infrastructure as Code (IaC) by comparing manual CI/CD pipeline setup versus automated deployment using AWS CloudFormation. You'll experience firsthand how IaC improves reliability, consistency, and repeatability in SRE practices. We'll deploy a simple CI/CD pipeline for a web application using both approaches, then reflect on the benefits of automation.
+Welcome to Lab 9 of the SRE Workshop! This hands-on activity introduces you to Infrastructure as Code (IaC) by comparing manual CI/CD pipeline setup versus automated deployment using AWS CloudFormation. You'll experience firsthand how IaC improves reliability, consistency, and repeatability in SRE practices. We'll deploy a simple CI/CD pipeline for a web application using both approaches, then reflect on the benefits of automation.
 
 This guide is designed for beginners with basic AWS knowledge. Each step includes explanations, troubleshooting tips, and clear comparisons between manual and IaC approaches. We'll use AWS Free Tier resources where possible, but monitor your usage to avoid unexpected charges.
 
