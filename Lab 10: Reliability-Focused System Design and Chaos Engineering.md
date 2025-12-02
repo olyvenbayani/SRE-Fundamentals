@@ -1,4 +1,4 @@
-Welcome to Lab 9 of the SRE Workshop! This hands-on activity introduces you to designing reliable systems that can withstand failures. You'll learn about load balancing, redundancy, failover strategies, and get a gentle introduction to Chaos Engineering. We'll deploy a simple web application across multiple servers, then intentionally break things to see how resilience works in practice. Don't worry—this lab is designed to be easier and more fun than Lab 8!
+Welcome to Lab 10 of the SRE Workshop! This hands-on activity introduces you to designing reliable systems that can withstand failures. You'll learn about load balancing, redundancy, failover strategies, and get a gentle introduction to Chaos Engineering. We'll deploy a simple web application across multiple servers, then intentionally break things to see how resilience works in practice. Don't worry—this lab is designed to be easier and more fun than Lab 8!
 
 This guide is designed for beginners. Each step includes clear explanations and troubleshooting tips. We'll use AWS Free Tier resources and focus on concepts over complexity.
 
