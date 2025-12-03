@@ -176,33 +176,7 @@ Blast Radius: Checkout disabled, browsing OK
    - Hypothesis: _________________________________
    - Expected outcome: _________________________________
    - How would you verify? _________________________________
-
-3. **What if the payment gateway is slow (500ms latency)?**
-   - Hypothesis: _________________________________
-   - Expected outcome: _________________________________
-   - How would you verify? _________________________________
-
-### Scenario 2: Video Streaming Service
-
-**System Architecture:**
-- Frontend (CloudFront CDN)
-- API servers (Auto Scaling group)
-- Video storage (S3)
-- User database (DynamoDB)
-- Recommendation engine (separate microservice)
-
-**Design 2 chaos experiments:**
-
-1. **Experiment focusing on availability:**
-   - Component: _________________________________
-   - Failure scenario: _________________________________
-   - Hypothesis: _________________________________
-
-2. **Experiment focusing on performance degradation:**
-   - Component: _________________________________
-   - Failure scenario: _________________________________
-   - Hypothesis: _________________________________
-
+   
 ---
 
 ## Part 4: Chaos Engineering Best Practices (2 minutes)
