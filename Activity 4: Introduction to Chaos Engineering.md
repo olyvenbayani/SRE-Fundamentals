@@ -151,8 +151,6 @@ Monitor:
 - S3 for product images
 - Payment gateway (external API)
 
-**Your Task:** Design 3 chaos experiments
-
 **Example Experiment:**
 ```
 Title: Database Unavailability
@@ -164,8 +162,6 @@ Expected Outcome:
   - System recovers when RDS restarts
 Blast Radius: Checkout disabled, browsing OK
 ```
-
-**Now design experiments for:**
 
 1. **What if one web server crashes?**
    - Hypothesis: _________________________________
