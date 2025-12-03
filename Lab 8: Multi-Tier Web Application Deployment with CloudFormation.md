@@ -1,4 +1,6 @@
-Welcome to Lab 8! In this hands-on lab, you'll use AWS CloudFormation to build a **production-ready multi-tier web application** from scratch. Unlike Lab 8 which focused on CI/CD pipelines, this lab challenges you to create a complete infrastructure with load balancing, auto-scaling, and monitoring—all defined as code.
+# Lab 8: Multi-Tier Web Application Deployment with CloudFormation
+
+Welcome to Lab 8! In this hands-on lab, you'll use AWS CloudFormation to build a **production-ready multi-tier web application** from scratch. 
 
 This lab is designed for beginners but will challenge you to think critically about infrastructure design, CloudFormation best practices, and troubleshooting. You'll deploy everything as code, update your infrastructure, and experience the full power of Infrastructure as Code.
 
@@ -81,15 +83,15 @@ Let's organize our lab files properly.
 1. **Create a new directory for this lab:**
 
    ```bash
-   mkdir -p ~/lab10-cloudformation
-   cd ~/lab10-cloudformation
+   mkdir -p ~/lab8-cloudformation
+   cd ~/lab8-cloudformation
    ```
 
 2. **Verify you're in the right directory:**
 
    ```bash
    pwd
-   # Should show: /Users/your-username/lab10-cloudformation
+   # Should show: /Users/your-username/lab8-cloudformation
    ```
 
 **Why?** Keeping files organized makes it easier to manage templates and troubleshoot.
@@ -104,7 +106,7 @@ We'll build the template in stages to help you understand each component.
 
 ```yaml
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'Lab 10 - Self-Healing Web Application with Auto Scaling, Load Balancer, and Monitoring'
+Description: 'Lab 8 - Self-Healing Web Application with Auto Scaling, Load Balancer, and Monitoring'
 
 Parameters:
   LatestAmiId:
@@ -139,14 +141,14 @@ Resources:
       EnableDnsSupport: true
       Tags:
         - Key: Name
-          Value: Lab10-VPC
+          Value: Lab8-VPC
   
   InternetGateway:
     Type: AWS::EC2::InternetGateway
     Properties:
       Tags:
         - Key: Name
-          Value: Lab10-IGW
+          Value: Lab8-IGW
   
   AttachGateway:
     Type: AWS::EC2::VPCGatewayAttachment
@@ -163,7 +165,7 @@ Resources:
       MapPublicIpOnLaunch: true
       Tags:
         - Key: Name
-          Value: Lab10-PublicSubnet1
+          Value: Lab8-PublicSubnet1
   
   PublicSubnet2:
     Type: AWS::EC2::Subnet
@@ -174,7 +176,7 @@ Resources:
       MapPublicIpOnLaunch: true
       Tags:
         - Key: Name
-          Value: Lab10-PublicSubnet2
+          Value: Lab8-PublicSubnet2
   
   PublicRouteTable:
     Type: AWS::EC2::RouteTable
@@ -182,7 +184,7 @@ Resources:
       VpcId: !Ref VPC
       Tags:
         - Key: Name
-          Value: Lab10-PublicRouteTable
+          Value: Lab8-PublicRouteTable
   
   PublicRoute:
     Type: AWS::EC2::Route
@@ -225,7 +227,7 @@ Resources:
           Description: Allow all outbound traffic
       Tags:
         - Key: Name
-          Value: Lab10-ALB-SG
+          Value: Lab8-ALB-SG
   
   WebServerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -244,7 +246,7 @@ Resources:
           Description: Allow all outbound traffic
       Tags:
         - Key: Name
-          Value: Lab10-WebServer-SG
+          Value: Lab8-WebServer-SG
   
   # Add SSH access if KeyName is provided
   WebServerSSHIngress:
@@ -266,7 +268,7 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     DependsOn: AttachGateway
     Properties:
-      Name: Lab10-ALB
+      Name: Lab8-ALB
       Scheme: internet-facing
       Type: application
       IpAddressType: ipv4
@@ -277,12 +279,12 @@ Resources:
         - !Ref LoadBalancerSecurityGroup
       Tags:
         - Key: Name
-          Value: Lab10-ALB
+          Value: Lab8-ALB
   
   ALBTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      Name: Lab10-TG
+      Name: Lab8-TG
       Port: 80
       Protocol: HTTP
       VpcId: !Ref VPC
@@ -296,7 +298,7 @@ Resources:
       TargetType: instance
       Tags:
         - Key: Name
-          Value: Lab10-TargetGroup
+          Value: Lab8-TargetGroup
   
   ALBListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
@@ -315,7 +317,7 @@ Resources:
   LaunchTemplate:
     Type: AWS::EC2::LaunchTemplate
     Properties:
-      LaunchTemplateName: Lab10-WebServer-Template
+      LaunchTemplateName: Lab8-WebServer-Template
       LaunchTemplateData:
         ImageId: !Ref LatestAmiId
         InstanceType: t2.micro
@@ -340,7 +342,7 @@ Resources:
             <!DOCTYPE html>
             <html>
             <head>
-                <title>Lab 10 - Multi-Tier Application</title>
+                <title>Lab 8 - Multi-Tier Application</title>
                 <style>
                     body {
                         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -434,7 +436,7 @@ Resources:
           - ResourceType: instance
             Tags:
               - Key: Name
-                Value: Lab10-WebServer
+                Value: Lab8-WebServer
   
   AutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
@@ -443,7 +445,7 @@ Resources:
       - PublicSubnet1
       - PublicSubnet2
     Properties:
-      AutoScalingGroupName: Lab10-ASG
+      AutoScalingGroupName: Lab8-ASG
       LaunchTemplate:
         LaunchTemplateId: !Ref LaunchTemplate
         Version: !GetAtt LaunchTemplate.LatestVersionNumber
@@ -459,7 +461,7 @@ Resources:
         - !Ref ALBTargetGroup
       Tags:
         - Key: Name
-          Value: Lab10-ASG-Instance
+          Value: Lab8-ASG-Instance
           PropagateAtLaunch: true
   
   # ============================================
@@ -483,8 +485,8 @@ Resources:
   SNSTopic:
     Type: AWS::SNS::Topic
     Properties:
-      TopicName: Lab10-Alerts
-      DisplayName: Lab 10 CloudWatch Alarms
+      TopicName: Lab8-Alerts
+      DisplayName: Lab 8 CloudWatch Alarms
       Subscription:
         - Endpoint: !Ref YourEmail
           Protocol: email
@@ -492,7 +494,7 @@ Resources:
   HighCPUAlarm:
     Type: AWS::CloudWatch::Alarm
     Properties:
-      AlarmName: Lab10-HighCPU
+      AlarmName: Lab8-HighCPU
       AlarmDescription: Triggers when average CPU utilization exceeds 70%
       MetricName: CPUUtilization
       Namespace: AWS/EC2
@@ -511,7 +513,7 @@ Resources:
   UnhealthyHostAlarm:
     Type: AWS::CloudWatch::Alarm
     Properties:
-      AlarmName: Lab10-UnhealthyHosts
+      AlarmName: Lab8-UnhealthyHosts
       AlarmDescription: Triggers when there are unhealthy targets in the target group
       MetricName: UnHealthyHostCount
       Namespace: AWS/ApplicationELB
@@ -610,7 +612,7 @@ Having SSH access will help you troubleshoot if needed.
 
 1. **AWS Console → EC2 → Key Pairs → Create key pair**
 2. **Settings:**
-   - Name: `lab10-key`
+   - Name: `lab8-key`
    - Key pair type: RSA
    - Private key file format: .pem
 3. **Create key pair** (file will download automatically)
@@ -619,7 +621,7 @@ Having SSH access will help you troubleshoot if needed.
 **On Mac/Linux, set proper permissions:**
 
 ```bash
-chmod 400 ~/lab10-cloudformation/lab10-key.pem
+chmod 400 ~/lab8-cloudformation/lab8-key.pem
 ```
 
 **Why Optional?** The lab works without SSH, but having access helps verify instance configuration and troubleshoot issues.
@@ -638,16 +640,16 @@ Time to launch your infrastructure!
    - Click **Next**
 
 3. **Specify stack details:**
-   - **Stack name:** `Lab10-SelfHealing-App`
+   - **Stack name:** `Lab8-SelfHealing-App`
    - **Parameters:**
      - LatestAmiId: Leave default (auto-populates latest Amazon Linux 2 AMI)
-     - SshKeyName: `lab10-key` (or leave empty if you didn't create one)
+     - SshKeyName: `lab8-key` (or leave empty if you didn't create one)
      - YourEmail: `your-actual-email@example.com` (you'll receive confirmation)
    - Click **Next**
 
 4. **Configure stack options:**
    - **Tags** (optional but good practice):
-     - Key: `Lab`, Value: `Lab10`
+     - Key: `Lab`, Value: `Lab8`
      - Key: `Purpose`, Value: `SRE-Training`
    - Leave other settings as default
    - Click **Next**
@@ -698,7 +700,7 @@ Let's make sure everything deployed successfully!
 2. **Check Outputs:**
    - Click **Outputs** tab
    - Copy the **LoadBalancerURL** value
-   - Should look like: `http://lab10-alb-1234567890.us-east-1.elb.amazonaws.com`
+   - Should look like: `http://lab8-alb-1234567890.us-east-1.elb.amazonaws.com`
 
 3. **Open Application:**
    - Paste LoadBalancerURL into browser
@@ -727,19 +729,19 @@ Let's explore the AWS Console to see all the resources CloudFormation created fo
 
 **Open these AWS Console pages in separate browser tabs:**
 
-1. **CloudFormation → Stacks → Lab10-Multi-Tier-App**
+1. **CloudFormation → Stacks → Lab8-Multi-Tier-App**
     - Click **Resources** tab (see all 30+ resources created)
     - Click **Events** tab (see creation timeline)
 
-2. **EC2 → Auto Scaling Groups → Lab10-ASG**
+2. **EC2 → Auto Scaling Groups → Lab8-ASG**
     - Click **Activity** tab (see scaling activities)
     - Click **Instance management** tab (see current instances)
 
-3. **EC2 → Target Groups → Lab10-TG**
+3. **EC2 → Target Groups → Lab8-TG**
     - Click **Targets** tab (see health status of instances)
 
 4. **CloudWatch → Alarms**
-    - See your two alarms: `Lab10-HighCPU` and `Lab10-UnhealthyHosts`
+    - See your two alarms: `Lab8-HighCPU` and `Lab8-UnhealthyHosts`
 
 5. **Your application URL** (from CloudFormation Outputs)
     - Keep this tab open to test the application
@@ -766,7 +768,7 @@ Now let's observe how the Application Load Balancer distributes traffic across m
 
 **2. Understand What CloudFormation Created:**
 
-Navigate to **CloudFormation → Stacks → Lab10-Multi-Tier-App → Resources tab**
+Navigate to **CloudFormation → Stacks → Lab8-Multi-Tier-App → Resources tab**
 
 **Find these key resources and understand their relationships:**
 
@@ -780,7 +782,7 @@ Navigate to **CloudFormation → Stacks → Lab10-Multi-Tier-App → Resources t
 
 **3. Explore the Template Designer:**
 
-- CloudFormation → Stacks → Lab10-Multi-Tier-App → **Template** tab
+- CloudFormation → Stacks → Lab8-Multi-Tier-App → **Template** tab
 - Click **View in Designer**
 - **Observe:** Visual diagram showing resource dependencies
 - **Notice:** Lines connecting resources show relationships (e.g., ASG depends on Target Group)
@@ -800,7 +802,7 @@ Let's generate some CPU load and watch the Auto Scaling Group add instances.
 **Hints:**
 
 1. Get instance public IP from EC2 Console
-2. SSH using your key: `ssh -i lab10-key.pem ec2-user@<instance-public-ip>`
+2. SSH using your key: `ssh -i lab8-key.pem ec2-user@<instance-public-ip>`
 3. Install stress tool: `sudo yum install stress -y`
 4. Run stress test: `stress --cpu 2 --timeout 300` (5 minutes)
 
@@ -813,7 +815,7 @@ Use EC2 Instance Connect (browser-based):
 
 **What to Watch:**
 
-1. **CloudWatch Alarms:** `Lab10-HighCPU` should trigger within 5-10 minutes
+1. **CloudWatch Alarms:** `Lab8-HighCPU` should trigger within 5-10 minutes
 2. **Auto Scaling Group:** Should launch additional instances (up to 4 total)
 3. **Email:** You'll receive a high CPU alarm notification
 
@@ -835,7 +837,7 @@ Use EC2 Instance Connect (browser-based):
 
 Now that you've seen the infrastructure in action, let's understand HOW CloudFormation made this possible.
 
-**CloudFormation Console → Stacks → Lab10-SelfHealing-App**
+**CloudFormation Console → Stacks → Lab8-SelfHealing-App**
 
 **Explore these features:**
 
@@ -889,7 +891,7 @@ Now that you've seen the infrastructure in action, let's understand HOW CloudFor
 **Steps to Update Stack:**
 
 1. Edit your local `web-app-infrastructure.yaml` file
-2. CloudFormation → Stacks → Lab10-SelfHealing-App → Update
+2. CloudFormation → Stacks → Lab8-SelfHealing-App → Update
 3. Replace current template → Upload modified file
 4. Next → Next → Update stack
 5. Watch CloudFormation update only the changed resources!
@@ -919,7 +921,7 @@ LoadBalancerSecurityGroup:
         Description: Allow all outbound traffic
     Tags:
       - Key: Name
-        Value: Lab10-ALB-SG
+        Value: Lab8-ALB-SG
 ```
 
 ---
@@ -931,28 +933,28 @@ LoadBalancerSecurityGroup:
 **Debugging Checklist:**
 
 1. **Check Load Balancer:**
-   - EC2 → Load Balancers → Lab10-ALB
+   - EC2 → Load Balancers → Lab8-ALB
    - State should be "active"
    - Check listeners (should have port 80)
 
 2. **Check Target Group Health:**
-   - EC2 → Target Groups → Lab10-TG
+   - EC2 → Target Groups → Lab8-TG
    - Targets tab: Are instances healthy?
    - If unhealthy, click instance → Health status details → See reason
 
 3. **Check Auto Scaling Group:**
-   - EC2 → Auto Scaling Groups → Lab10-ASG
+   - EC2 → Auto Scaling Groups → Lab8-ASG
    - Activity history: Any failed launches?
    - Instance management: Are instances running?
 
 4. **Check Security Groups:**
-   - EC2 → Security Groups → Lab10-ALB-SG
+   - EC2 → Security Groups → Lab8-ALB-SG
    - Inbound rules: Port 80 from 0.0.0.0/0?
-   - EC2 → Security Groups → Lab10-WebServer-SG
+   - EC2 → Security Groups → Lab8-WebServer-SG
    - Inbound rules: Port 80 from ALB security group?
 
 5. **Check VPC Networking:**
-   - VPC → Route Tables → Lab10-PublicRouteTable
+   - VPC → Route Tables → Lab8-PublicRouteTable
    - Routes: Should have 0.0.0.0/0 → Internet Gateway
    - VPC → Subnets: Both subnets should be associated with public route table
 
@@ -960,7 +962,7 @@ LoadBalancerSecurityGroup:
 
    ```bash
    # Connect to instance
-   ssh -i lab10-key.pem ec2-user@<instance-ip>
+   ssh -i lab8-key.pem ec2-user@<instance-ip>
    
    # Check if Apache is running
    sudo systemctl status httpd
@@ -973,7 +975,7 @@ LoadBalancerSecurityGroup:
    ```
 
 7. **Check CloudFormation Stack:**
-   - CloudFormation → Stacks →Lab10-SelfHealing-App
+   - CloudFormation → Stacks →Lab8-SelfHealing-App
    - Status: Should be CREATE_COMPLETE or UPDATE_COMPLETE
    - Events: Any failed resource updates?
 
@@ -998,7 +1000,7 @@ LoadBalancerSecurityGroup:
 **Manual Approach:**
 
 1. CloudWatch → Dashboards → Create dashboard
-2. Name: `Lab10-Dashboard`
+2. Name: `Lab8-Dashboard`
 3. Add widgets:
    - Line graph: EC2 CPUUtilization (by Auto Scaling Group)
    - Number widget: Healthy Host Count (from Target Group)
@@ -1012,7 +1014,7 @@ Add this resource to your template:
 CloudWatchDashboard:
   Type: AWS::CloudWatch::Dashboard
   Properties:
-    DashboardName: Lab10-SelfHealing-Dashboard
+    DashboardName: Lab8-SelfHealing-Dashboard
     DashboardBody: !Sub |
       {
         "widgets": [
@@ -1137,13 +1139,13 @@ One of the most powerful benefits of Infrastructure as Code is the ability to up
        EnableDnsSupport: true
        Tags:
          - Key: Name
-           Value: Lab10-VPC
+           Value: Lab8-VPC
          - Key: Environment
            Value: !Ref Environment
    ```
 
 3. **Update the Stack:**
-   - CloudFormation → Stacks → Lab10-Multi-Tier-App → **Update**
+   - CloudFormation → Stacks → Lab8-Multi-Tier-App → **Update**
    - **Replace current template** → Upload your modified file
    - Enter parameter value for Environment: `dev`
    - Next → Next → **Update stack**
@@ -1174,13 +1176,13 @@ One of the most powerful benefits of Infrastructure as Code is the ability to up
 **Try This Detection Exercise:**
 
 1. **Manually modify a resource:**
-   - EC2 → Load Balancers → Lab10-ALB
+   - EC2 → Load Balancers → Lab8-ALB
    - Actions → Edit attributes
    - Change "Idle timeout" from 60 to 120 seconds
    - Save changes
 
 2. **Detect drift in CloudFormation:**
-   - CloudFormation → Stacks → Lab10-Multi-Tier-App
+   - CloudFormation → Stacks → Lab8-Multi-Tier-App
    - **Stack actions** → **Detect drift**
    - Wait for detection to complete (~1 minute)
    - Click **View drift results**
@@ -1253,16 +1255,16 @@ One of the most powerful benefits of Infrastructure as Code is the ability to up
 **Correct Cleanup Process:**
 
 1. **Delete CloudFormation Stack:**
-   - CloudFormation → Stacks → Lab10-Multi-Tier-App
+   - CloudFormation → Stacks → Lab8-Multi-Tier-App
    - Select stack → Delete
    - Confirm deletion
    - Wait for status: `DELETE_COMPLETE` (5-7 minutes)
 
 2. **Verify Deletion:**
    - CloudFormation shows stack deleted
-   - EC2 → Instances: All Lab10 instances should be "Terminated"
-   - EC2 → Load Balancers: Lab10-ALB should be deleted
-   - VPC → Your VPCs: Lab10-VPC should be deleted
+   - EC2 → Instances: All Lab8 instances should be "Terminated"
+   - EC2 → Load Balancers: Lab8-ALB should be deleted
+   - VPC → Your VPCs: Lab8-VPC should be deleted
 
 3. **Manual Cleanup (if needed):**
    - Sometimes load balancer takes time to delete
@@ -1412,26 +1414,26 @@ This pattern is foundational for modern cloud operations:
 ```bash
 # Create stack
 aws cloudformation create-stack \
-  --stack-name Lab10-SelfHealing-App \
+  --stack-name Lab8-SelfHealing-App \
   --template-body file://web-app-infrastructure.yaml \
   --parameters ParameterKey=YourEmail,ParameterValue=your-email@example.com \
   --capabilities CAPABILITY_NAMED_IAM
 
 # Update stack
 aws cloudformation update-stack \
-  --stack-name Lab10-SelfHealing-App \
+  --stack-name Lab8-SelfHealing-App \
   --template-body file://web-app-infrastructure.yaml \
   --parameters ParameterKey=YourEmail,ParameterValue=your-email@example.com \
   --capabilities CAPABILITY_NAMED_IAM
 
 # Delete stack
-aws cloudformation delete-stack --stack-name Lab10-SelfHealing-App
+aws cloudformation delete-stack --stack-name Lab8-SelfHealing-App
 
 # Describe stack
-aws cloudformation describe-stacks --stack-name Lab10-SelfHealing-App
+aws cloudformation describe-stacks --stack-name Lab8-SelfHealing-App
 
 # View stack events
-aws cloudformation describe-stack-events --stack-name Lab10-SelfHealing-App
+aws cloudformation describe-stack-events --stack-name Lab8-SelfHealing-App
 ```
 
 **Troubleshooting Checklist:**
@@ -1451,4 +1453,4 @@ aws cloudformation describe-stack-events --stack-name Lab10-SelfHealing-App
 
 ---
 
-*End of Lab 10*
+*End of Lab 8*
