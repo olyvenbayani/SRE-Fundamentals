@@ -238,7 +238,7 @@ Blast Radius: Checkout disabled, browsing OK
 | **Chaos Toolkit** | Open-source framework | Custom experiments, any platform |
 | **Pumba** | Docker chaos testing | Docker/container testing |
 
-### Simple Manual Chaos (What We'll Do in Lab 9)
+### Simple Manual Chaos
 
 You don't need fancy tools to start! Manual chaos experiments:
 - Terminate EC2 instances via console
@@ -250,8 +250,6 @@ You don't need fancy tools to start! Manual chaos experiments:
 ---
 
 ## Reflection Questions
-
-Before moving to Lab 9, discuss:
 
 1. **Why is it safer to intentionally break things than to wait for them to break?**
    - You control the timing (business hours, team ready)
@@ -279,43 +277,39 @@ Before moving to Lab 9, discuss:
 
 ## Quick Quiz
 
-Test your understanding before Lab 9:
-
 **1. What is the first step in a chaos experiment?**
    - a) Introduce failure
-   - b) Define steady state ✅
+   - b) Define steady state
    - c) Hope for the best
    - d) Call the manager
 
 **2. You terminate one instance and the entire site goes down. This means:**
    - a) Chaos Engineering doesn't work
-   - b) You found a valuable weakness to fix ✅
+   - b) You found a valuable weakness to fix
    - c) You should never terminate instances
    - d) The experiment failed
 
 **3. When should you run your first production chaos experiment?**
    - a) 3 AM on Sunday (no one is around)
    - b) During Black Friday (high traffic)
-   - c) Business hours with team monitoring ✅
+   - c) Business hours with team monitoring 
    - d) Never - too risky
 
 **4. Netflix's Chaos Monkey:**
-   - a) Randomly terminates instances in production ✅
+   - a) Randomly terminates instances in production 
    - b) Tests code for bugs
    - c) Monitors application performance
    - d) Deploys new features
 
 **5. The goal of Chaos Engineering is to:**
    - a) Create more incidents
-   - b) Build confidence in system resilience ✅
+   - b) Build confidence in system resilience 
    - c) Make developers afraid
    - d) Prove the system is perfect
 
 ---
 
 ## Key Takeaways
-
-Before moving to Lab 9, remember:
 
 ✅ **Chaos Engineering is proactive, not destructive** - It's about learning and improving
 
