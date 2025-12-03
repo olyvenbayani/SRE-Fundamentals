@@ -518,25 +518,6 @@ But when you're ready:
 
 ---
 
-## What's Next?
-
-You've mastered Infrastructure as Code! But we can go further...
-
-In **Activity 3**, you'll add CI/CD to automatically:
-- ✅ Validate templates before deployment
-- ✅ Deploy on every Git push
-- ✅ Catch errors automatically
-- ✅ Create a full deployment pipeline
-
-**Before moving on:**
-- Keep your CloudFormation stack (or be ready to recreate it)
-- Understand how templates define infrastructure
-- Appreciate how much easier this is than manual clicking!
-
-Ready for full automation? Head to **Guided Activity 3: CI/CD Pipeline Setup**! 🚀
-
----
-
 ## Additional Resources
 
 - **CloudFormation Template Reference:** https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-reference.html
